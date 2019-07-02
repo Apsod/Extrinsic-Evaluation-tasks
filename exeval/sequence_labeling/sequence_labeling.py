@@ -34,12 +34,27 @@ def mkXY(data, win, m, tag2ix):
 
 
 def mk_parser(parser):
-    parser.add_argument('--vector_path', required=True,
-                        help='path to the embeddings')
-    parser.add_argument('--window', '-w', default=2, type=int,
-                        help='window size')
-    parser.add_argument('--task', choices=['ner', 'pos', 'chunk'],
-                        help='Training task')
+    parser.add_argument(
+        '--window',
+        default=2,
+        type=int,
+        help='window size')
+    parser.add_argument(
+        '--task',
+        choices=['ner', 'pos', 'chunk'],
+        help='Training task')
+    parser.add_argument(
+        '--solver',
+        choices=['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'],
+        default='lbfgs',
+        help='solver to use in sklearn'
+    )
+    parser.add_argument(
+        '--multiclass',
+        choices=['ovr', 'multinomial'],
+        default='multinomial',
+        help='type of multiclass loss: one-vs-rest or multinomial'
+    )
     parser.set_defaults(go=run)
 
 
@@ -59,6 +74,7 @@ def run(args):
     train_x, train_y = mkXY(train_set + valid_set, args.window, m, tag2ix)
     test_x, test_y = mkXY(test_set, args.window, m, tag2ix)
 
+    logging.info('Number of tags: {}'.format(len(tags)))
     logging.info('X type: {}'.format(train_x.dtype))
     logging.info('Train X shape: {}'.format(train_x.shape))
     logging.info('Train Y shape: {}'.format(train_y.shape))
@@ -66,10 +82,11 @@ def run(args):
     logging.info('Test Y shape: {}'.format(test_y.shape))
 
     logging.info('Fitting LR model')
-    lrc = LogisticRegression()
-    lrc.fit(train_x[:100000], train_y[:100000])
+    lrc = LogisticRegression(solver='lbfgs', multi_class=args.multiclass)
+    lrc.fit(train_x, train_y)
 
     # get results
+
     if args.task == 'pos':
         score_train = lrc.score(train_x, train_y)
         score_test = lrc.score(test_x, test_y)

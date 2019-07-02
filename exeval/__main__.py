@@ -1,15 +1,19 @@
 import argparse
-from exeval import sequence_labeling
+from exeval import sequence_labeling, snli
 import logging
 
 
 MODULES = {
-    'sequence_labeling': sequence_labeling
+    'sequence_labeling': sequence_labeling,
+    'snli': snli
 }
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--log', action='store_true')
+    parser.add_argument('--vector_path',
+                        required=True,
+                        help='path to vectors (in text format)')
 
 
     subparser=parser.add_subparsers()
