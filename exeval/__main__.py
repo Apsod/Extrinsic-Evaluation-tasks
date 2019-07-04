@@ -1,11 +1,12 @@
 import argparse
-from exeval import sequence_labeling, snli
+from exeval import sequence_labeling, snli, subjectivity_classification
 import logging
 
 
 MODULES = {
     'sequence_labeling': sequence_labeling,
-    'snli': snli
+    'snli': snli,
+    'subjective': subjectivity_classification
 }
 
 def main():

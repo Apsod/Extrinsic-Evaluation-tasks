@@ -18,8 +18,8 @@ def extract_tokens_from_binary_parse(parse):
 
 
 def read_file(filename, skip_no_majority=True):
-    with path(__name__, filename) as file:
-        for line in gzip.open(file, 'rt'):
+    with path(__name__, filename) as file, gzip.open(file, 'rt') as lines:
+        for line in lines:
             data = json.loads(line)
             label = data['gold_label']
             s1 = ' '.join(extract_tokens_from_binary_parse(data['sentence1_binary_parse']))

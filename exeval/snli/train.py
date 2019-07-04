@@ -2,6 +2,7 @@ from .data import get, LABELS
 
 import tempfile
 import numpy as np
+import logging
 np.random.seed(1337)  # for reproducibility
 
 '''
@@ -29,15 +30,20 @@ def run(args):
     from keras.preprocessing.sequence import pad_sequences
     from keras.preprocessing.text import Tokenizer
     from keras.regularizers import l2
+
+    logging.info('Loading train dev and test sets')
     training = get('train')
     validation = get('dev')
     test = get('test')
 
+    logging.info('Constructing tokenizer')
     tokenizer = Tokenizer(lower=args.lower, filters='', oov_token=UNK)
     tokenizer.fit_on_texts(training[0] + training[1])
 
+    logging.info('Loading embeddings')
     dsm = DSM.read(args.vector_path, restrict=tokenizer.word_counts)
 
+    logging.info('Constructing model')
     # Lowest index from the tokenizer is 1 - we need to include 0 in our vocab count
     VOCAB = len(tokenizer.word_counts) + 2
     RNN = recurrent.LSTM
@@ -59,8 +65,8 @@ def run(args):
     L2 = 4e-6
     ACTIVATION = 'relu'
     OPTIMIZER = 'rmsprop'
-    print('RNN / Embed / Sent = {}, {}, {}'.format(RNN, EMBED_HIDDEN_SIZE, SENT_HIDDEN_SIZE))
-    print('GloVe / Trainable Word Embeddings = {}, {}'.format(USE_PRETRAIN_EMED, TRAIN_EMBED))
+    logging.info('RNN / Embed / Sent = {}, {}, {}'.format(RNN, EMBED_HIDDEN_SIZE, SENT_HIDDEN_SIZE))
+    logging.info('GloVe / Trainable Word Embeddings = {}, {}'.format(USE_PRETRAIN_EMED, TRAIN_EMBED))
 
 
     def prepare_data(data):
@@ -74,20 +80,21 @@ def run(args):
     validation = prepare_data(validation)
     test = prepare_data(test)
 
-    print('Build model...')
-    print('Vocab size =', VOCAB)
+    logging.info('Build model...')
+    logging.info('Vocab size =', VOCAB)
 
 
 
     embedding_matrix = np.zeros((VOCAB, EMBED_HIDDEN_SIZE))
+    nulls = 0
     for word, i in tokenizer.word_index.items():
         if word.lower() in dsm:
             embedding_matrix[i] = dsm[word.lower()]
         else:
             embedding_matrix[i] = dsm[PAD]
+            nulls += 1
 
-    print('Total number of null word embeddings:')
-    print(np.sum(np.sum(embedding_matrix, axis=1) == 0))
+    logging.info('Total number of null word embeddings: {}'.format(nulls))
 
     embed = Embedding(VOCAB, EMBED_HIDDEN_SIZE, weights=[embedding_matrix], input_length=MAX_LEN, trainable=TRAIN_EMBED)
 
@@ -114,9 +121,9 @@ def run(args):
     model = Model(input=[premise, hypothesis], output=pred)
     model.compile(optimizer=OPTIMIZER, loss='categorical_crossentropy', metrics=['accuracy'])
 
-    model.summary()
+    model.summary(print_fn=logging.info)
 
-    print('Training')
+    logging.info('Training')
     _, tmpfn = tempfile.mkstemp()
     # Save the best model during validation and bail out of training early if we're not improving
     callbacks = [EarlyStopping(patience=PATIENCE), ModelCheckpoint(tmpfn, save_best_only=True, save_weights_only=True)]

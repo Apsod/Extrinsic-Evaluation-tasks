@@ -1,5 +1,7 @@
-from importlib.resources import open_text
+from importlib.resources import path
+import gzip
 import itertools
+from exeval.util import open_gzipped
 
 TASK2POS = {
     'pos': 1,
@@ -24,9 +26,7 @@ def read_file(task, filename, words, tags):
             ts.append(tag)
 
         return ws, ts
-
-
-    with open_text(__name__, filename) as lines:
+    with path(__name__, filename) as fn, gzip.open(fn, 'rt') as lines:
         for empty, sentence in itertools.groupby(lines, key=lambda line: line.strip() == ""):
             if not empty:
                 yield read_sentence(sentence)
@@ -36,7 +36,7 @@ def load(task):
     words = set()
     tags = set()
     for type in ["train", "test", "valid"] :
-        filename = '{}.txt'.format(type)
+        filename = '{}.txt.gz'.format(type)
         out[type] = list(read_file(task, filename, words, tags))
 
     return out["train"], out["valid"], out["test"], words, tags

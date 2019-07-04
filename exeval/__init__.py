@@ -1,1 +1,1 @@
-from .util import DSM, PAD, UNK
+from .dsm import DSM, PAD, UNK

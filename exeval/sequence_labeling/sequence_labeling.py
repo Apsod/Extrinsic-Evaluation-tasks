@@ -7,7 +7,8 @@ import argparse
 import logging
 
 from .data import load
-from exeval.util import DSM, invert_index, PAD
+from exeval import DSM, PAD
+from exeval.util import invert_index
 
 # make sliding window over sequence
 def contextwin(xs, win):
