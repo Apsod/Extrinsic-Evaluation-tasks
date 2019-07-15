@@ -32,19 +32,10 @@ def mk_parser(parser):
     parser.set_defaults(go = run)
 
 
-def mk_model(max_len, dsm):
-
-    return model
-
-
-
 def run(args):
     # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
     #      Start of the preprocessing
     # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
-
-    outputFilePath = 'pkl/data.pkl.gz'
-
 
     logging.info("Loading train, dev, and test set")
     train_x, train_y = get('train', args.lower)
@@ -100,6 +91,7 @@ def run(args):
     logging.info('dev shape:   {}'.format(dev_x.shape))
     logging.info('test shape:  {}'.format(test_x.shape))
 
+
     # :: MAKE MODEL ::
     # set parameters:
     batch_size = 64
@@ -114,10 +106,11 @@ def run(args):
     words_input = Input(shape=(max_len,), dtype='int32', name='words_input')
 
     #word embedding layer
-    wordsEmbeddingLayer = Embedding(dsm.shape[0],
-                        dsm.shape[1],
-                        weights=[dsm.m],
-                        trainable=False)
+    wordsEmbeddingLayer = Embedding(
+        dsm.shape[0],
+        dsm.shape[1],
+        weights=[dsm.m],
+        trainable=False)
 
     words = wordsEmbeddingLayer(words_input)
 
@@ -149,6 +142,7 @@ def run(args):
     model = Model(inputs=[words_input], outputs=[output])
 
     model.summary(print_fn=logging.info)
+
 
     dev_acc = []
     test_acc = []

@@ -35,6 +35,9 @@ class DSM(object):
     def __contains__(self, item):
         return item in self.w2i
 
+    def __len__(self):
+        return self.shape[0]
+
 
     @property
     def shape(self):

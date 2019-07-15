@@ -1,17 +1,20 @@
 import argparse
-from exeval import sequence_labeling, snli, subjectivity_classification
+from exeval import sequence_labeling, snli, subjectivity_classification, relation_extraction
 import logging
+import os
 
 
 MODULES = {
     'sequence_labeling': sequence_labeling,
     'snli': snli,
-    'subjective': subjectivity_classification
+    'subjective': subjectivity_classification,
+    'relation': relation_extraction,
 }
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--log', action='store_true')
+    parser.add_argument('--backend', type=str)
     parser.add_argument('--vector_path',
                         required=True,
                         help='path to vectors (in text format)')
@@ -28,6 +31,8 @@ def main():
     if args.log:
         logging.basicConfig(level=logging.DEBUG)
 
+    if args.backend:
+        os.environ['KERAS_BACKEND'] = args.backend
     args.go(args)
 
 
