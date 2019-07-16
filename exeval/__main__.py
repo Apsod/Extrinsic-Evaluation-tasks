@@ -1,5 +1,5 @@
 import argparse
-from exeval import sequence_labeling, snli, subjectivity_classification, relation_extraction
+from exeval import sequence_labeling, snli, subjectivity_classification, relation_extraction, sentiment_classification
 import logging
 import os
 
@@ -9,6 +9,7 @@ MODULES = {
     'snli': snli,
     'subjective': subjectivity_classification,
     'relation': relation_extraction,
+    'sentiment': sentiment_classification,
 }
 
 def main():
