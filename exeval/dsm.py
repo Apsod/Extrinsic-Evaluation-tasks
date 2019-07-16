@@ -43,6 +43,14 @@ class DSM(object):
     def shape(self):
         return self.m.shape
 
+    def to_embedding_layer(self, trainable=False):
+        from keras.layers import Embedding
+        return Embedding(
+            self.shape[0],
+            self.shape[1],
+            weights=[self.m],
+            trainable=trainable)
+
     @staticmethod
     def read(path, restrict=None, dtype=numpy.float32):
         if restrict is not None:
@@ -76,4 +84,7 @@ class DSM(object):
         vecs[1] = numpy.random.uniform(-0.25, 0.25, dim).astype(dtype) #Random vector for 'UNK' word (???)
 
         return DSM(words, numpy.array(vecs))
+
+
+
 
