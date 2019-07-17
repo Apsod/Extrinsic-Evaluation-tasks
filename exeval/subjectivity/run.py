@@ -88,12 +88,11 @@ def run(args):
 
     model = Model(inputs=[BoV], outputs=[output])
 
-    #model.summary()
     dev_acc = []
     test_acc = []
 
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-    model.summary()
+    model.summary(print_fn=logging.info)
     model.fit(train_x, train_y, batch_size=batch_size, shuffle=True, epochs=nb_epoch, verbose=0,validation_data=(dev_x, dev_y))
 
     #Use Keras to compute the loss and the accuracy

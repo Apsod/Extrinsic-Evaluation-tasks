@@ -10,7 +10,7 @@ do
     exeval --log --vector_path $vector_path $method
   done
 
-  for task in pos neg chunk
+  for task in pos ner chunk
   do
     echo "sequence_labeling $task"
     exeval --log --vector_path $vector_path sequence_labeling --task $task
