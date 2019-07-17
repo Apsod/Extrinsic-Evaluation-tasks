@@ -1,7 +1,5 @@
 
 import numpy
-import gzip
-import os
 
 from .util import invert_index
 

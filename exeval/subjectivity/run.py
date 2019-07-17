@@ -2,27 +2,6 @@
 The file preprocesses the data/train.txt, data/dev.txt and data/test.txt from sentiment classification task (English)
 
 """
-"""
-from __future__ import print_function
-import numpy as np
-import gzip
-import os
-
-import sys
-if (sys.version_info > (3, 0)):
-    import pickle as pkl
-else: #Python 2.7 imports
-    import cPickle as pkl
-
-#embeddings path
-DIR_PATH = os.getcwd()
-embeddingsPath = os.path.join(DIR_PATH, 'embeddings/vectors.txt')
-
-#Train, Dev, and Test files
-folder = 'data/'
-files = [folder+'train.txt',  folder+'dev.txt', folder+'test.txt']
-
-"""
 
 from exeval import DSM
 from .data import get
@@ -76,11 +55,6 @@ def run(args):
     import keras
     from keras.models import Model
     from keras.layers import Input, Dense, Dropout, Activation, Flatten, concatenate
-    from keras.layers import Embedding, Add
-    from keras.regularizers import Regularizer
-    from keras.preprocessing import sequence
-    from keras.layers import Lambda
-    from keras import backend as K
 
 
 
@@ -120,7 +94,7 @@ def run(args):
 
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     model.summary()
-    model.fit(train_x, train_y, batch_size=batch_size, epochs=nb_epoch, verbose=1,validation_data=(dev_x, dev_y))
+    model.fit(train_x, train_y, batch_size=batch_size, shuffle=True, epochs=nb_epoch, verbose=1,validation_data=(dev_x, dev_y))
 
     #Use Keras to compute the loss and the accuracy
     dev_loss, dev_accuracy = model.evaluate(dev_x, dev_y, verbose=False)

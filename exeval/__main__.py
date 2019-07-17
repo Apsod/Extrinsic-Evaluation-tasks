@@ -35,6 +35,7 @@ def main():
 
     if args.backend:
         os.environ['KERAS_BACKEND'] = args.backend
+
     args.go(args)
 
 

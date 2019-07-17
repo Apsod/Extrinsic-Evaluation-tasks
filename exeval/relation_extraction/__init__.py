@@ -1,1 +1,1 @@
-from .preprocess import mk_parser
+from .run import mk_parser

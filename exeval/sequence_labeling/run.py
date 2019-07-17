@@ -1,8 +1,6 @@
 import numpy
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
-import sys
-import argparse
 
 import logging
 

@@ -1,15 +1,9 @@
-
-from __future__ import print_function
 from exeval import DSM
 from exeval.util import invert_index
 from .data import get
 import numpy
 import itertools
 import logging
-import gzip
-import os
-import sys
-
 
 
 LABEL_TYPES = [
@@ -108,7 +102,7 @@ def run(args):
     from keras.preprocessing import sequence
 
     words_input = Input(shape=(maxlen,), dtype='int32', name='words_input')
-    words = Embedding(dsm.shape[0], dsm.shape[1], weights=[dsm.m], trainable=False)(words_input)
+    words = dsm.to_embedding_layer()(words_input)#Embedding(dsm.shape[0], dsm.shape[1], weights=[dsm.m], trainable=False)(words_input)
 
     distance1_input = Input(shape=(maxlen,), dtype='int32', name='distance1_input')
     distance1 = Embedding(max_position, position_dims)(distance1_input)
@@ -144,15 +138,8 @@ def run(args):
     test_y = test[0]
 
     logging.info("Start training")
-    hist = model.fit(train_x, train_y, batch_size=batch_size, verbose=True,epochs=nb_epoch)
+    hist = model.fit(train_x, train_y, batch_size=batch_size, shuffle=True, verbose=args.verbose,epochs=nb_epoch)
 
     test_loss, test_accuracy = model.evaluate(test_x, test_y, verbose=False)
-
-
-    print("Train loss: {:.4f}, Train accuracy: {:.4f}".format(hist.history['loss'][-1], hist.history['acc'][-1]))
+    #print("Train loss: {:.4f}, Train accuracy: {:.4f}".format(hist.history['loss'][-1], hist.history['acc'][-1]))
     print("Test loss: {:.4f}, Test accuracy: {:.4f}".format(test_loss, test_accuracy))
-
-
-
-
-

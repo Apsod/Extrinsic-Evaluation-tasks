@@ -25,16 +25,10 @@ def create_tensor(data, dsm, maxlen):
     return tokens, labels
 
 def run(args):
-    from keras.preprocessing import sequence
+    import_keras()
     from keras.models import Sequential
     from keras.layers import Dense, Embedding
     from keras.layers import LSTM
-    from keras.datasets import imdb
-    from collections import defaultdict
-    import keras
-    import numpy as np
-    import os
-    from exeval import DSM
 
     maxlen = 80  # cut texts after this number of words (among top max_features most common words)
     batch_size = 128
@@ -73,6 +67,7 @@ def run(args):
     logging.info('Training')
     model.fit(train_x, train_y,
               batch_size=batch_size,
+              shuffle=True,
               epochs=20)
     score, acc = model.evaluate(test_x, test_y,
                                 batch_size=batch_size)

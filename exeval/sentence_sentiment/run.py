@@ -148,7 +148,7 @@ def run(args):
     test_acc = []
 
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-    model.fit(train_x, train_y, batch_size=batch_size, epochs=nb_epoch, validation_data=(dev_x, dev_y))
+    model.fit(train_x, train_y, batch_size=batch_size, shuffle=True, epochs=nb_epoch, validation_data=(dev_x, dev_y))
 
     #compute the loss and the accuracy
     dev_loss, dev_accuracy = model.evaluate(dev_x, dev_y, verbose=False)

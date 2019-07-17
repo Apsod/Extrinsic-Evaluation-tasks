@@ -19,13 +19,9 @@ def mk_parser(parser):
 
 
 def run(args):
-    import keras
-    import keras.backend as K
     from keras.callbacks import EarlyStopping, ModelCheckpoint
     from keras.layers import concatenate, recurrent, Dense, Input, Dropout, TimeDistributed
     from keras.layers.embeddings import Embedding
-    from keras.layers.normalization import BatchNormalization
-    from keras.layers.wrappers import Bidirectional
     from keras.models import Model
     from keras.preprocessing.sequence import pad_sequences
     from keras.preprocessing.text import Tokenizer
@@ -81,7 +77,7 @@ def run(args):
     test = prepare_data(test)
 
     logging.info('Build model...')
-    logging.info('Vocab size =', VOCAB)
+    logging.info('Vocab size: {}'.format(VOCAB))
 
 
 
@@ -127,7 +123,7 @@ def run(args):
     _, tmpfn = tempfile.mkstemp()
     # Save the best model during validation and bail out of training early if we're not improving
     callbacks = [EarlyStopping(patience=PATIENCE), ModelCheckpoint(tmpfn, save_best_only=True, save_weights_only=True)]
-    model.fit([training[0], training[1]], training[2], batch_size=BATCH_SIZE, nb_epoch=MAX_EPOCHS, validation_data=([validation[0], validation[1]], validation[2]), callbacks=callbacks)
+    model.fit([training[0], training[1]], training[2], shuffle=True, batch_size=BATCH_SIZE, nb_epoch=MAX_EPOCHS, validation_data=([validation[0], validation[1]], validation[2]), callbacks=callbacks)
 
     # Restore the best found model during validation
     model.load_weights(tmpfn)
