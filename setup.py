@@ -4,7 +4,7 @@ setup(
     name='exeval',
     version='0.0.1',
     packages=find_packages(),
-    package_data={'':['*.txt']},
+    package_data={'':['*.txt.gz']},
 
     install_requires=['numpy', 'scikit-learn'],
 
