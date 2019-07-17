@@ -81,7 +81,7 @@ def run(args):
     logging.info('Test Y shape: {}'.format(test_y.shape))
 
     logging.info('Fitting LR model')
-    lrc = LogisticRegression(solver='lbfgs', multi_class=args.multiclass)
+    lrc = LogisticRegression(solver=args.solver, multi_class=args.multiclass)
     lrc.fit(train_x, train_y)
 
     # get results

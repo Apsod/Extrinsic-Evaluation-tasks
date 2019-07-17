@@ -138,7 +138,7 @@ def run(args):
     test_y = test[0]
 
     logging.info("Start training")
-    hist = model.fit(train_x, train_y, batch_size=batch_size, shuffle=True, verbose=args.verbose,epochs=nb_epoch)
+    hist = model.fit(train_x, train_y, batch_size=batch_size, shuffle=True, verbose=0, epochs=nb_epoch)
 
     test_loss, test_accuracy = model.evaluate(test_x, test_y, verbose=False)
     #print("Train loss: {:.4f}, Train accuracy: {:.4f}".format(hist.history['loss'][-1], hist.history['acc'][-1]))

@@ -25,7 +25,7 @@ def create_tensor(data, dsm, maxlen):
     return tokens, labels
 
 def run(args):
-    import_keras()
+    import keras
     from keras.models import Sequential
     from keras.layers import Dense, Embedding
     from keras.layers import LSTM
@@ -64,12 +64,15 @@ def run(args):
                   metrics=['accuracy'])
 
     model.summary(print_fn=logging.info)
-    logging.info('Training')
     model.fit(train_x, train_y,
               batch_size=batch_size,
               shuffle=True,
+              verbose=0,
               epochs=20)
+
+
     score, acc = model.evaluate(test_x, test_y,
+                                verbose=False,
                                 batch_size=batch_size)
 
     print('Test score:', score)

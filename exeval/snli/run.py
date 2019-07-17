@@ -123,10 +123,10 @@ def run(args):
     _, tmpfn = tempfile.mkstemp()
     # Save the best model during validation and bail out of training early if we're not improving
     callbacks = [EarlyStopping(patience=PATIENCE), ModelCheckpoint(tmpfn, save_best_only=True, save_weights_only=True)]
-    model.fit([training[0], training[1]], training[2], shuffle=True, batch_size=BATCH_SIZE, nb_epoch=MAX_EPOCHS, validation_data=([validation[0], validation[1]], validation[2]), callbacks=callbacks)
+    model.fit([training[0], training[1]], training[2], shuffle=True, batch_size=BATCH_SIZE, nb_epoch=MAX_EPOCHS, verbose=0, validation_data=([validation[0], validation[1]], validation[2]), callbacks=callbacks)
 
     # Restore the best found model during validation
     model.load_weights(tmpfn)
 
-    loss, acc = model.evaluate([test[0], test[1]], test[2], batch_size=BATCH_SIZE)
+    loss, acc = model.evaluate([test[0], test[1]], test[2], batch_size=BATCH_SIZE, verbose=False)
     print('Test loss / test accuracy = {:.4f} / {:.4f}'.format(loss, acc))

@@ -94,7 +94,7 @@ def run(args):
 
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     model.summary()
-    model.fit(train_x, train_y, batch_size=batch_size, shuffle=True, epochs=nb_epoch, verbose=1,validation_data=(dev_x, dev_y))
+    model.fit(train_x, train_y, batch_size=batch_size, shuffle=True, epochs=nb_epoch, verbose=0,validation_data=(dev_x, dev_y))
 
     #Use Keras to compute the loss and the accuracy
     dev_loss, dev_accuracy = model.evaluate(dev_x, dev_y, verbose=False)
