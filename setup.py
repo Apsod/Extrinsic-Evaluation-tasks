@@ -6,7 +6,7 @@ setup(
     packages=find_packages(),
     package_data={'':['*.txt.gz']},
 
-    install_requires=['numpy', 'scikit-learn'],
+    install_requires=['numpy', 'scikit-learn', 'keras'],
 
     entry_points={
         'console_scripts':[
