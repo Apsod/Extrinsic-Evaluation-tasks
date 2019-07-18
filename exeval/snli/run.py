@@ -14,7 +14,7 @@ from exeval import DSM, UNK, PAD
 
 
 def mk_parser(parser):
-    parser.add_argument('--lower', action='store_true', help='lowercase text during preprocessing')
+    parser.add_argument('--preserve_case', action='store_true', help='preserve case during preprocessing, default: lowercase')
     parser.set_defaults(go = run)
 
 
@@ -33,7 +33,7 @@ def run(args):
     test = get('test')
 
     logging.info('Constructing tokenizer')
-    tokenizer = Tokenizer(lower=args.lower, filters='', oov_token=UNK)
+    tokenizer = Tokenizer(lower=not args.preserve_case, filters='', oov_token=UNK)
     tokenizer.fit_on_texts(training[0] + training[1])
 
     logging.info('Loading embeddings')
@@ -129,4 +129,8 @@ def run(args):
     model.load_weights(tmpfn)
 
     loss, acc = model.evaluate([test[0], test[1]], test[2], batch_size=BATCH_SIZE, verbose=False)
-    print('Test loss / test accuracy = {:.4f} / {:.4f}'.format(loss, acc))
+
+    return {
+        'loss': loss,
+        'accuracy': acc
+    }

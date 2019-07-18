@@ -142,4 +142,8 @@ def run(args):
 
     test_loss, test_accuracy = model.evaluate(test_x, test_y, verbose=False)
     #print("Train loss: {:.4f}, Train accuracy: {:.4f}".format(hist.history['loss'][-1], hist.history['acc'][-1]))
-    print("Test loss: {:.4f}, Test accuracy: {:.4f}".format(test_loss, test_accuracy))
+
+    return {
+        'loss': test_loss,
+        'accuracy': test_accuracy,
+    }

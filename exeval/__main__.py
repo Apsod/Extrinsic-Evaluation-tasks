@@ -2,6 +2,8 @@ import argparse
 from exeval import sequence_labeling, snli, subjectivity, relation_extraction, sentence_sentiment, document_sentiment
 import logging
 import os
+import json
+import sys
 
 
 MODULES = {
@@ -22,7 +24,7 @@ def main():
                         help='path to vectors (in text format)')
 
 
-    subparser=parser.add_subparsers()
+    subparser=parser.add_subparsers(help='task to run', dest='task')
 
     for name, module in MODULES.items():
         sp = subparser.add_parser(name)
@@ -36,7 +38,22 @@ def main():
     if args.backend:
         os.environ['KERAS_BACKEND'] = args.backend
 
-    args.go(args)
+    logging.info('Running task {} with vectors {}'.format(args.task, args.vector_path))
+    metrics = args.go(args)
+    args = vars(args)
+
+    # Remove "go" from args because it is only there for logistical reasons.
+    del args['go']
+    # Remove "log" from args because it is not relevant for the output.
+    del args['log']
+
+    output = {
+        'parameters': args,
+        'metrics': metrics,
+    }
+
+    json.dump(output, sys.stdout)
+    sys.stdout.write('\n')
 
 
 

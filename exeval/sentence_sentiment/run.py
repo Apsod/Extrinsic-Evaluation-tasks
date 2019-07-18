@@ -28,7 +28,7 @@ def createMatrices(sentences, dsm):
 
 
 def mk_parser(parser):
-    parser.add_argument('--lower', action='store_true', help='lowercase text during preprocessing')
+    parser.add_argument('--preserve_case', action='store_true', help='if set preserves case, otherwise lowercase')
     parser.set_defaults(go = run)
 
 
@@ -38,9 +38,9 @@ def run(args):
     # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
 
     logging.info("Loading train, dev, and test set")
-    train_x, train_y = get('train', args.lower)
-    dev_x, dev_y = get('dev', args.lower)
-    test_x, test_y = get('test', args.lower)
+    train_x, train_y = get('train', lower = not args.preserve_case)
+    dev_x, dev_y = get('dev', lower = not args.preserve_case)
+    test_x, test_y = get('test', lower = not args.preserve_case)
 
 
     # :: Compute which words are needed for the train/dev/test set ::
@@ -155,5 +155,10 @@ def run(args):
     test_loss, test_accuracy = model.evaluate(test_x, test_y, verbose=False)
 
 
-    print("Dev-Accuracy: %.2f" % (dev_accuracy*100))
-    print("Test-Accuracy: %.2f)" % (test_accuracy*100))
+    #print("Dev-Accuracy: %.2f" % (dev_accuracy*100))
+    #print("Test-Accuracy: %.2f)" % (test_accuracy*100))
+
+    return {
+        'loss': test_loss,
+        'accuracy': test_accuracy
+    }

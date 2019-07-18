@@ -39,9 +39,9 @@ def mk_parser(parser):
         type=int,
         help='window size')
     parser.add_argument(
-        '--task',
+        '--subtask',
         choices=['ner', 'pos', 'chunk'],
-        help='Training task')
+        help='Training subtask')
     parser.add_argument(
         '--solver',
         choices=['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'],
@@ -59,7 +59,7 @@ def mk_parser(parser):
 
 def run(args):
     logging.info('Loading train, test, and validation data sets')
-    train_set, valid_set, test_set, words, tags = load(args.task)
+    train_set, valid_set, test_set, words, tags = load(args.subtask)
 
 
     logging.info('Loading embeddings')
@@ -86,15 +86,10 @@ def run(args):
 
     # get results
 
-    if args.task == 'pos':
-        score_train = lrc.score(train_x, train_y)
-        score_test = lrc.score(test_x, test_y)
-        print("training set accuracy: %f" % (score_train))
-        print("test set accuracy: %f" % (score_test))
-    else:
-        pred_train = lrc.predict(train_x)
-        pred_test = lrc.predict(test_x)
-        f1_score_train = f1_score(train_y, pred_train, average='weighted')
-        f1_score_test = f1_score(test_y, pred_test, average='weighted')
-        print("Training set F1 score: %f" % f1_score_train)
-        print("Test set F1 score: %f" % f1_score_test)
+    pred_test = lrc.predict(test_x)
+    f1_score_test = f1_score(test_y, pred_test, average='weighted')
+
+    return {
+        'f1_score': f1_score_test
+    }
+

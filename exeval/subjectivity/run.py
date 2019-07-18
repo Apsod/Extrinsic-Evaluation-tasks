@@ -99,6 +99,7 @@ def run(args):
     dev_loss, dev_accuracy = model.evaluate(dev_x, dev_y, verbose=False)
     test_loss, test_accuracy = model.evaluate(test_x, test_y, verbose=False)
 
-    print("Dev-Accuracy: %.2f" % (dev_accuracy*100))
-    print("Test-Accuracy: %.2f)" % (test_accuracy*100))
-
+    return {
+        'loss': test_loss,
+        'accuracy': test_accuracy,
+    }

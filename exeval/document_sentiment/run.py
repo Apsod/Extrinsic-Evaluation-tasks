@@ -71,9 +71,11 @@ def run(args):
               epochs=20)
 
 
-    score, acc = model.evaluate(test_x, test_y,
-                                verbose=False,
-                                batch_size=batch_size)
+    loss, acc = model.evaluate(test_x, test_y,
+                               verbose=False,
+                               batch_size=batch_size)
 
-    print('Test score:', score)
-    print('Test accuracy:', acc)
+    return {
+        'loss': loss,
+        'accuracy': acc
+    }
