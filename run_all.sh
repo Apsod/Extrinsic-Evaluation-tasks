@@ -10,6 +10,6 @@ do
 
   for task in pos ner chunk
   do
-    exeval --log --vector_path $vector_path sequence_labeling --task $task
+    exeval --log --vector_path $vector_path sequence_labeling --subtask $task
   done
 done
